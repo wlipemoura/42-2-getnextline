@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/08 22:32:17 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/09 15:34:24 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@
 
 //TROQUE OS NOMES DAS VARIÁVEIS DA SPLIT!!!!
 
-#include <unisdt.h>
-# include <stdlib.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -104,6 +104,83 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	}
 	return ((char *) dest);
 }
+
+char	*ft_strdup(const char *s)
+{
+	char	*new_string;
+	size_t	length;
+
+	length = ft_strlen(s) + 1;
+	new_string = malloc(length * sizeof(char));
+	if (!new_string)
+		return (NULL);
+	ft_memcpy(new_string, s, length);
+	return (new_string);
+}
+
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	counter;
+	char	*substring;
+	size_t	substring_length;
+
+	counter = 0;
+	if (!s)
+		return (ft_strdup(""));
+	if (start > ft_strlen(s))
+		substring_length = 0;
+	else
+	{
+		substring_length = ft_strlen(s + start);
+		if (substring_length > len)
+			substring_length = len;
+	}
+	substring = (char *)malloc(substring_length + 1);
+	if (substring == NULL)
+		return (NULL);
+	while (counter < substring_length)
+	{
+		*(substring + counter) = *(s + start + counter);
+		counter++;
+	}
+	*(substring + counter) = '\0';
+	return (substring);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	cont;
+
+	cont = 0;
+	while (*(s1 + cont) && *(s2 + cont)
+		&& cont < (n - 1)
+		&& (*(s1 + cont) == *(s2 + cont)))
+		cont++;
+	if ((*(s1 + cont) != *(s2 + cont) && n))
+		return (*(unsigned char *)(s1 + cont) - *(unsigned char *)(s2 + cont));
+	return (0);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*newstring;
+	int		lens1;
+	int		lens2;
+
+	if (!s1 || !s2)
+		return (NULL);
+	lens1 = ft_strlen (s1);
+	lens2 = ft_strlen (s2);
+	newstring = ft_calloc ((lens1 + lens2 + 1), sizeof (char));
+	if (!newstring)
+		return (NULL);
+	ft_memcpy (newstring, s1, lens1);
+	ft_memcpy (newstring + lens1, s2, lens2);
+	return (newstring);
+}
+
+
 //0. Verificar a posição do último caractere na variável estática por meio da strlen (se não houver nada, considerar 0).
 //1. Callocar buf bytes na variável estática a partir da posição após o último caractere para receber o conteúdo lido (se não houver nada, considerar a primeira posição)
 //2. Ler BUF bytes no fd e alocar na variável estática
@@ -124,56 +201,61 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 //7. Se não houver quebra, mas eu não chegar ao final do arquivo:
 //	7.1. vá para o passo 0.
 
-pegue oomprimento lido (usando ft_strlen) que foi inserido na estática
-//Calloque o comprimento numa string temporária, que servirá para permitir a limpeza da string estática
-//
-//Se for o último retorno, retorne a variável estática.
 char *get_next_line(int fd)
 {
 	static char	*line_that_is_be_readen;
-	char		*im_returning_bitch;
-	char		*first_enter_index;
-	char		*next_enter_index;
-	char		*auxiliar;
-	size_t		counter1;
-	size_t		counter2;
-	int			i_finished_the_file;
-
-	counter1 = 0;
-	counter2 = 0;
-	line_that_is_be_readen = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	i_finished_the_file = read(fd, (line_that_is_be_readen + counter), BUFFER_SIZE);
-	//Aqui imagine que tem um if para se der BO no read eu parar a função
-	if (read worked well)//se leu alguma coisa, precisarei alocar no retorno (o que é feito no while). Aloco memória para preparar.
-		im_returning_bitch = ft_calloc(ft_strlen(line_that_is_be_readen), sizeof(char));
-	while(*(line_that_is_be_readen + counter1) && *(line_that_is_be_readen + counter1) != '\n')
+	size_t		after_last_char_read_index;
+	int			newline_address;
+	size_t		newline_index;
+	char 		*returned;
+	char 		*auxiliar;
+	int			end_file_identifier;
+	int 		BUFFER_SIZE;
+//0. Verificar a posição do último caractere na variável estática por meio da strlen (se não houver nada, considerar 0).
+	(after_last_char_read_index = ft_strlen(line_that_is_be_readen));
+//O BO TÁ AQUI:
+//1. Callocar buf bytes na variável estática a partir da posição após o último caractere para receber o conteúdo lido (se não houver nada, considerar a primeira posição)
+	(line_that_is_be_readen + after_last_char_read_index) = ft_calloc(BUFFER_SIZE, sizeof(char));
+//2. Ler BUF bytes no fd e alocar na variável estática
+	end_file_identifier = read(fd, (line_that_is_be_readen + after_last_char_read_index), BUFFER_SIZE);
+//3. Se a leitura não foi bem sucedida (read = 0), faça uma maracutaia que não sei o que é
+//4. Se leu e deu certo, verifique se há uma quebra de linha nos caracteres alocados na estática usando strchr.
+	if (newline_address = ft_strchr(line_that_is_be_readen, '\n'))
+//5.1. verifique em qual posição está a quebra de linha usando strlen aplicada na estática (certamente é possível obter isso a partir do resultado do item 4 ao invés do strlen)
 	{
-		*(im_returning_bitch + counter1) = *(line_that_is_be_readen + counter2);
-		counter1++;
-		counter2++;
+		while((line_that_is_be_readen + newline_index) != '\n')
+			++newline_index;
+//5.2. use essa informação e a substr para criar uma substring com o conteúdo a ser retornado.
+		returned = ft_substr(line_that_is_be_readen, 0, (newline_index + 1));
+//	5.3. use novamente strlen para obter a quantidade de memória necessária para alocar o conteúdo restante, após a quebra de linha, numa variável auxiliar. Use o resultado do passo 4 para obter a posição.
+		auxiliar = ft_calloc((ft_strlen(newline_address + 1)), sizeof(char));
+//	5.4. pegue a posição seguinte à quebra na estática e aloque todo o conteúdo a partir daí na variável auxiliar, usando memcpy por exemplo
+		ft_memcpy(auxiliar, (newline_address + 1), (ft_strlen(newline_address + 1)));
+//	5.6. free na estática
+		//free(line_that_is_be_readen);
+//	5.7. calloque na estática a mesma quantidade de memória callocada no item 5.3 (pular esse passo se a estática for igual à retornada - nesse caso o buffer acabou numa quebra, ou seja, não há sobra)
+		if(ft_strncmp(line_that_is_be_readen, returned, ft_strlen(line_that_is_be_readen)) = 0)
+			free(line_that_is_be_readen);
+		else
+		{
+			free(line_that_is_be_readen);
+			line_that_is_be_readen = ft_calloc(ft_strlen(auxiliar), sizeof(char));
+//	5.8. copie o conteúdo da string auxiliar para a estática (pular esse passo se a estática for igual à retornada - nesse caso o buffer acabou numa quebra, ou seja, não há sobra)
+			ft_memcpy(line_that_is_be_readen, auxiliar, ft_strlen(auxiliar));
+//	5.9. free na auxiliar (pular esse passo se a estática for igual à retornada - nesse caso o buffer acabou numa quebra, ou seja, não há sobra))
+			free(auxiliar);
+//	5.10. Retorne a string criada em 5.2.
+			return (returned);
+		}
 	}
-	first_enter_index = ft_strchr(line_that_is_be_readen + counter, '\n');//A: verifico se há algum \n lido
-	//next_enter_index = ft_strchr(first_enter_index + 1, '\n');B: verifico se houveram dois \n lidos
-	if (first_enter_index != NULL)//Se A for verdadeiro, preciso:
-	//1. guardar o que tem depois do '\n' na variável estática
-	//2. retornar o conteúdo até o '\n'
-		auxiliar = ft_substr(first_enter_index + 1, ft_strlen(next_enter_index))
-		free(line_that_is_be_readen);
-		line_that_is_be_readen = ft_calloc(ft_strlen(auxiliar), sizof(char))
-		ft_memcpy(line_that_is_be_readen, auxiliar);
-		free(auxiliar);
-		while (*(line_that_is_be_readen + counter1) !== '\n')
-
-	if (first_enter_index = NULL)//Se A for falso, preciso continuar a leitura
-	//last_enter_index = ft_strchr(next_enter_index + 1, '\n')
-	
-	if (i_finished_the_file = 0 || )
-		return (im_returning_bitch);
-		
-		
-		
-		
-		
+//6. Se não houver quebra, mas eu chegar ao final do arquivo:
+//COMO É QUE EU SEI QUE CHEGUEI NO FINAL DO ARQUIVO, MANO?
+//	6.1. retorne a variável estática
+	else if (end_file_identifier = 0)
+		return(line_that_is_be_readen);
+//7. Se não houver quebra, mas eu não chegar ao final do arquivo:
+//	7.1. vá para o passo 0.
 	else
 		get_next_line(fd);
+	return (NULL);
 }
