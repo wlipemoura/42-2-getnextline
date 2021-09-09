@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/09 17:05:05 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/09 17:49:20 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -222,14 +225,17 @@ char *get_next_line(int fd)
 		joined_and_returned = ft_strjoin(line_that_is_be_readen, auxiliar);
 //3. Free na ESTÁTICA
 		free(line_that_is_be_readen);
+		line_that_is_be_readen = NULL;
 //4. Free na AUXILIAR
 		free(auxiliar);
+		auxiliar = NULL;
 	}
 	else
 	{
 		joined_and_returned = ft_calloc(ft_strlen(auxiliar), sizeof(char));
 		ft_memcpy(joined_and_returned, auxiliar, ft_strlen(auxiliar));
 		free(auxiliar);
+		auxiliar = NULL;
 	}
 //5. Callocar na posição inicial da ESTÁTICA o comprimento da TERCEIRA string, gerada em 2
 	line_that_is_be_readen = ft_calloc(ft_strlen(joined_and_returned), sizeof(char));
@@ -241,6 +247,7 @@ char *get_next_line(int fd)
 		}
 //7. Free na TERCEIRA string
 	free(joined_and_returned);
+	joined_and_returned = NULL;
 //8. Verifique se há uma quebra de linha na variável ESTÁTICA usando strchr
 	if (ft_strchr(line_that_is_be_readen, '\n'))
 	{
@@ -253,6 +260,7 @@ char *get_next_line(int fd)
 		joined_and_returned = ft_substr(line_that_is_be_readen, 0, (index + 1));
 //	9.3. use novamente strlen para obter a quantidade de memória necessária para alocar o conteúdo restante, após a quebra de linha, numa variável AUXILIAR.
 //	9.4. pegue a posição seguinte à quebra na ESTÁTICA e aloque todo o conteúdo a partir daí na variável AUXILIAR, usando memcpy por exemplo
+		auxiliar = ft_calloc(ft_strlen(line_that_is_be_readen + index), sizeof(char));
 		ft_memcpy(auxiliar, (line_that_is_be_readen + index + 1), (ft_strlen(line_that_is_be_readen + index + 1)));
 //	9.6. free na ESTÁTICA
 		if(ft_strncmp(line_that_is_be_readen, joined_and_returned, ft_strlen(line_that_is_be_readen)) == 0)
@@ -269,6 +277,7 @@ char *get_next_line(int fd)
 			ft_memcpy(line_that_is_be_readen, auxiliar, ft_strlen(auxiliar));
 //	9.9. free na AUXILIAR (pular esse passo se a ESTÁTICA for igual à retornada - nesse caso o buffer acabou numa quebra, ou seja, não há sobra))
 			free(auxiliar);
+			auxiliar = NULL;
 //	9.10. Retorne a string RETORNADA criada em 9.2.
 			return (joined_and_returned);
 		}
@@ -286,6 +295,8 @@ char *get_next_line(int fd)
 
 int	main (void)
 {
-	printf("O TEXTO É: \n%s", get_next_line(0));
+	int	fd;
+	fd = open("file.txt",O_RDONLY);
+	printf("O TEXTO É: \n%s", get_next_line(fd));
 	return (0);
 }
