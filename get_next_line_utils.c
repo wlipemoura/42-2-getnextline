@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:25 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/09 19:33:14 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/09 22:32:09 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,9 @@ void	*ft_calloc(size_t nmemb, size_t size)
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	counter;
 	char	*substring;
 	size_t	substring_length;
 
-	counter = 0;
 	if (!s)
 	{
 		substring = ft_calloc(1, sizeof(char));
@@ -144,4 +142,17 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	if ((*(s1 + cont) != *(s2 + cont) && n))
 		return (*(unsigned char *)(s1 + cont) - *(unsigned char *)(s2 + cont));
 	return (0);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*new_string;
+	size_t	length;
+
+	length = ft_strlen(s) + 1;
+	new_string = ft_calloc(length, sizeof(char));
+	if (!new_string)
+		return (NULL);
+	ft_memmove(new_string, s, length);
+	return (new_string);
 }
