@@ -6,13 +6,10 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/09 22:46:06 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/13 14:55:11 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//Lê o texto presente em um File Descriptor até que ele acabe?
-
-//retorna a linha que acabou de ser lida.
 
 //Se não há nada para ler, retorna nulo.
 
@@ -35,7 +32,7 @@ char *get_next_line(int fd)
 {
 	static char	*line_that_is_be_readen = NULL;
 	char 		*auxiliar;
-	char 		*joined_and_returned;
+	//char 		*joined_and_returned;
 	size_t		index;
 	int			end_file_identifier;//essa é só uma forma de identificar que foi a última leitura do arquivo.
 
@@ -43,7 +40,7 @@ char *get_next_line(int fd)
 while (end_file_identifier > 0)
 {
 	index = 0;
-	joined_and_returned = NULL;
+	//joined_and_returned = NULL;
 //1. Calocar BUF bytes numa variável AUXILIAR (+1 para ter uma string verdadeira)
 	auxiliar = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 //2. Ler BUF bytes no fd e alocar na variável AUXILIAR
@@ -51,28 +48,24 @@ while (end_file_identifier > 0)
 //2. Criar uma TERCEIRA variável a partir do join entre a ESTÁTICA e a AUXILIAR
 	if (line_that_is_be_readen)
 	{
-		joined_and_returned = ft_strjoin(line_that_is_be_readen, auxiliar);
-//3. Free na ESTÁTICA
-		free(line_that_is_be_readen);
-		line_that_is_be_readen = NULL;
-//4. Free na AUXILIAR
+		line_that_is_be_readen = ft_strjoin_modified(line_that_is_be_readen, auxiliar);
+//3. Free na ESTÁTICA - feito na join
+		//free(line_that_is_be_readen);
+		//line_that_is_be_readen = NULL;
+//4. Free na AUXILIAR - feito na join
 		free(auxiliar);
 		auxiliar = NULL;
 	}
 	else
 	{
-		joined_and_returned = ft_calloc(ft_strlen(auxiliar) + 1, sizeof(char));
-		ft_memmove(joined_and_returned, auxiliar, ft_strlen(auxiliar));
+		line_that_is_be_readen = ft_calloc(ft_strlen(auxiliar) + 1, sizeof(char));
+		ft_memmove(line_that_is_be_readen, auxiliar, ft_strlen(auxiliar));
 		free(auxiliar);
 		auxiliar = NULL;
 	}
 //5. Callocar na posição inicial da ESTÁTICA o comprimento da TERCEIRA string, gerada em 2
-	line_that_is_be_readen = ft_calloc(ft_strlen(joined_and_returned) + 1, sizeof(char));
 //6. Passar o conteúdo da TERCEIRA string para a variável ESTÁTICA
-	ft_memmove(line_that_is_be_readen, joined_and_returned, ft_strlen(joined_and_returned));
 //7. Free na TERCEIRA string
-	free(joined_and_returned);
-	joined_and_returned = NULL;
 //8. Verifique se há uma quebra de linha na variável ESTÁTICA usando strchr
 	if (ft_strchr(line_that_is_be_readen, '\n'))
 	{
@@ -126,7 +119,7 @@ while (end_file_identifier > 0)
 }
 	return (NULL);
 }
-/*
+
 int	main (void)
 {
 	int	fd;
@@ -139,4 +132,3 @@ int	main (void)
 	}
 	return (0);
 }
-*/

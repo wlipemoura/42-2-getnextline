@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:25 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/09 22:32:09 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/13 17:10:08 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	ft_memmove (newstring, s1, lens1);
 	ft_memmove (newstring + lens1, s2, lens2);
+	// free(s1);//Here is the modification
+	// s1 = NULL;
+	// free(s2);
+	// s2 = NULL;
 	return (newstring);
 }
 
