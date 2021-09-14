@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:25 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/13 21:31:06 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/13 17:10:08 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (substring);
 }
 
-char	*ft_strjoin_modified(char *s1, char *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*newstring;
 	int		lens1;
@@ -127,10 +127,10 @@ char	*ft_strjoin_modified(char *s1, char *s2)
 		return (NULL);
 	ft_memmove (newstring, s1, lens1);
 	ft_memmove (newstring + lens1, s2, lens2);
-	free(s1);//Here is the modification
-	s1 = NULL;
-	free(s2);
-	s2 = NULL;
+	// free(s1);//Here is the modification
+	// s1 = NULL;
+	// free(s2);
+	// s2 = NULL;
 	return (newstring);
 }
 
@@ -148,7 +148,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-char	*ft_strdup_modified(char *s)
+char	*ft_strdup(const char *s)
 {
 	char	*new_string;
 	size_t	length;
