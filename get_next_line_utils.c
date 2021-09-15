@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:25 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/14 21:15:14 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/15 00:10:05 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,51 +86,25 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (p);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*substring;
-	size_t	substring_length;
-
-	if (!s)
-	{
-		substring = ft_calloc(1, sizeof(char));
-		ft_memmove(substring, "", 1);
-		return (substring);
-	}
-	if (start > ft_strlen(s))
-		substring_length = 0;
-	else
-	{
-		substring_length = ft_strlen(s + start);
-		if (substring_length > len)
-			substring_length = len;
-	}
-	substring = ft_calloc(substring_length + 1, sizeof(char));
-	if (substring == NULL)
-		return (NULL);
-	ft_memmove(substring, s + start, substring_length);
-	return (substring);
-}
-
-char	*ft_strjoin_modified(char *s1, char *s2)
+char	*ft_strjoin_modified(char **s1, char **s2)
 {
 	char	*newstring;
 	int		lens1;
 	int		lens2;
 
-	if (!s1 || !s2)
+	if (!*s1 || !*s2)
 		return (NULL);
-	lens1 = ft_strlen (s1);
-	lens2 = ft_strlen (s2);
+	lens1 = ft_strlen (*s1);
+	lens2 = ft_strlen (*s2);
 	newstring = ft_calloc ((lens1 + lens2 + 1), sizeof (char));
 	if (!newstring)
 		return (NULL);
-	ft_memmove (newstring, s1, lens1);
-	ft_memmove (newstring + lens1, s2, lens2);
-	free(s1);//Here is the modification
-	s1 = NULL;
-	free(s2);
-	s2 = NULL;
+	ft_memmove (newstring, *s1, lens1);
+	ft_memmove (newstring + lens1, *s2, lens2);
+	free(*s1);//Here is the modification
+	*s1 = NULL;
+	free(*s2);
+	*s2 = NULL;
 	return (newstring);
 }
 
