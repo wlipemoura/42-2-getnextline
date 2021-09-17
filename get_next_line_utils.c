@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:25 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/16 23:13:22 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/16 23:22:49 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,43 +85,4 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		cont++;
 	}
 	return (p);
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t	cont;
-
-	cont = 0;
-	while (*(s1 + cont) && *(s2 + cont)
-		&& cont < (n - 1)
-		&& (*(s1 + cont) == *(s2 + cont)))
-		cont++;
-	if ((*(s1 + cont) != *(s2 + cont) && n))
-		return (*(unsigned char *)(s1 + cont) - *(unsigned char *)(s2 + cont));
-	return (0);
-}
-
-char	*ft_strjoin_and_free(char **s1, char **s2, int return_flag)
-{
-	char	*newstring;
-	int		lens1;
-	int		lens2;
-
-	lens1 = ft_strlen (*s1);
-	lens2 = ft_strlen (*s2);
-	newstring = ft_calloc ((lens1 + lens2 + 1), sizeof (char));
-	if (!newstring)
-		return (NULL);
-	ft_memmove(newstring, *s1, lens1);
-	ft_memmove(newstring + lens1, *s2, lens2);
-	free(*s2);
-	*s2 = NULL;
-	free(*s1);
-	*s1 = NULL;
-	if (return_flag)
-	{
-		free(newstring);
-		newstring = NULL;
-	}
-	return (newstring);
 }

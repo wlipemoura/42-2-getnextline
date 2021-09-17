@@ -6,24 +6,69 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/16 23:14:56 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/16 23:22:59 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//Garanta que sua função se comporta bem tanto lendo um arquivo quanto lendo um input padrão.
+//Garanta que sua função se comporta bem tanto lendo um arquivo quanto  
+//lendo um input padrão.
 
-//Seu programa precisa compilar com a flag -D BUFFER_SIZE=xx, que será usada como o tamanho do buffer
-//a ser lido na sua função get_next_line: gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
+//Seu programa precisa compilar com a flag -D BUFFER_SIZE=xx, que 
+//será usada como o tamanho do buffer
+//a ser lido na sua função get_next_line: 
+//gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
 
 //Cada vez que você encontrar uma linha, você deve retornar a linha atual.
 
 //Sua função ainda funciona quando o BUFFER_SIZE é 9999? E 1?
 
-//Try to read from a file, from a redirection, from standard input. How does your program behave when you send a
+//Try to read from a file, from a redirection, from standard input. 
+//How does your program behave when you send a
 //newline to the standard output? And CTRL-D?
 
-//7. Se a leitura não foi bem sucedida (read = 0), faça uma maracutaia que não sei o que é
+//7. Se a leitura não foi bem sucedida (read = 0), 
+//faça uma maracutaia que não sei o que é
 #include "get_next_line.h"
+
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	cont;
+
+	cont = 0;
+	while (*(s1 + cont) && *(s2 + cont)
+		&& cont < (n - 1)
+		&& (*(s1 + cont) == *(s2 + cont)))
+		cont++;
+	if ((*(s1 + cont) != *(s2 + cont) && n))
+		return (*(unsigned char *)(s1 + cont) - *(unsigned char *)(s2 + cont));
+	return (0);
+}
+
+char	*ft_strjoin_and_free(char **s1, char **s2, int return_flag)
+{
+	char	*newstring;
+	int		lens1;
+	int		lens2;
+
+	lens1 = ft_strlen (*s1);
+	lens2 = ft_strlen (*s2);
+	newstring = ft_calloc ((lens1 + lens2 + 1), sizeof (char));
+	if (!newstring)
+		return (NULL);
+	ft_memmove(newstring, *s1, lens1);
+	ft_memmove(newstring + lens1, *s2, lens2);
+	free(*s2);
+	*s2 = NULL;
+	free(*s1);
+	*s1 = NULL;
+	if (return_flag)
+	{
+		free(newstring);
+		newstring = NULL;
+	}
+	return (newstring);
+}
 
 char	*breakline_found(char **line, char *auxiliar)
 {
@@ -59,10 +104,10 @@ char	*get_next_line(int fd)
 	int			end_file_identifier;
 
 	end_file_identifier = 1;
-	auxiliar = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	auxiliar = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
 	end_file_identifier = read(fd, auxiliar, BUFFER_SIZE);
 	if (fd < 0 || (!*auxiliar && !line) || !auxiliar || read(fd, auxiliar, 0))
-		return(ft_strjoin_and_free(&auxiliar, &auxiliar, 1));
+		return (ft_strjoin_and_free(&auxiliar, &auxiliar, 1));
 	if (line && *auxiliar)
 		line = ft_strjoin_and_free(&line, &auxiliar, 0);
 	else if (*auxiliar)
