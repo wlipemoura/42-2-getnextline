@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/16 22:39:21 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/16 22:56:40 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char	*breakline_found(char **line, char *auxiliar)
 	while (*(*line + index) != '\n')
 		++index;
 	ptr = *(line) + index + 1;
+	free(auxiliar);
 	auxiliar = ft_calloc(ft_strlen(*line) - ft_strlen(ptr) + 1, sizeof(char));
 	ft_memmove(auxiliar, *line, ft_strlen(*line) - ft_strlen(ptr));
 	if (ft_strncmp(*line, auxiliar, ft_strlen(*line)) == 0)
@@ -76,23 +77,23 @@ char	*get_next_line(int fd)
 	return (get_next_line(fd));
 }
 
-// int	main (void)
-// {
-// 	int	fd_r;
-// 	fd_r = open("file_r.txt",O_RDONLY);
-// 	char *variavel_r;
+int	main (void)
+{
+	int	fd_r;
+	fd_r = open("file_r.txt",O_RDONLY);
+	char *variavel_r;
 
-// 	variavel_r = get_next_line(fd_r);
-// 	//printf("O TEXTO É: %s", variavel);
-// 	while(variavel_r)
-// 	{
-// 		printf("O TEXTO CERTO É: %s", variavel_r);
-// 		free(variavel_r);
-// 		variavel_r = get_next_line(fd_r);
-// 	}
-// 	free(variavel_r);
-// 	return (0);
-//
+	variavel_r = get_next_line(fd_r);
+	//printf("O TEXTO É: %s", variavel);
+	while(variavel_r)
+	{
+		printf("O TEXTO CERTO É: %s", variavel_r);
+		free(variavel_r);
+		variavel_r = get_next_line(fd_r);
+	}
+	free(variavel_r);
+	return (0);
+}
 
 // int	main (void)
 // {
