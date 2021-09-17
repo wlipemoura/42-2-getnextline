@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:25 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/16 21:57:34 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/16 23:13:22 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,20 +101,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-char	*ft_strdup(char *s)
-{
-	char	*new_string;
-	size_t	length;
-
-	length = ft_strlen(s) + 1;
-	new_string = ft_calloc(length, sizeof(char));
-	if (!new_string)
-		return (NULL);
-	ft_memmove(new_string, s, length);
-	return (new_string);
-}
-
-char	*ft_strjoin_and_free(char **s1, char **s2)
+char	*ft_strjoin_and_free(char **s1, char **s2, int return_flag)
 {
 	char	*newstring;
 	int		lens1;
@@ -131,12 +118,10 @@ char	*ft_strjoin_and_free(char **s1, char **s2)
 	*s2 = NULL;
 	free(*s1);
 	*s1 = NULL;
+	if (return_flag)
+	{
+		free(newstring);
+		newstring = NULL;
+	}
 	return (newstring);
-}
-
-void	freed_and_nulled(char **string)
-{
-	free(*string);
-	*string = NULL;
-	return ;
 }

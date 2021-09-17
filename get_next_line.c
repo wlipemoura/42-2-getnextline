@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/16 22:58:18 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/16 23:12:45 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ char	*breakline_found(char **line, char *auxiliar)
 	auxiliar = ft_calloc(ft_strlen(*line) - ft_strlen(ptr) + 1, sizeof(char));
 	ft_memmove(auxiliar, *line, ft_strlen(*line) - ft_strlen(ptr));
 	if (ft_strncmp(*line, auxiliar, ft_strlen(*line)) == 0)
-		free(ft_strjoin_and_free(line, &unecessary));
+		ft_strjoin_and_free(line, &unecessary, 1);
 	else
 	{
 		missed_buffer = ft_calloc(ft_strlen(*line) - index + 1, sizeof(char));
 		ft_memmove(missed_buffer, ptr, ft_strlen(*line) - index);
 		free(*line);
-		*line = ft_strjoin_and_free(&missed_buffer, &unecessary);
+		*line = ft_strjoin_and_free(&missed_buffer, &unecessary, 0);
 	}
 	return (auxiliar);
 }
@@ -62,38 +62,35 @@ char	*get_next_line(int fd)
 	auxiliar = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	end_file_identifier = read(fd, auxiliar, BUFFER_SIZE);
 	if (fd < 0 || (!*auxiliar && !line) || !auxiliar || read(fd, auxiliar, 0))
-	{
-		freed_and_nulled(&auxiliar);
-		return (NULL);
-	}
+		return(ft_strjoin_and_free(&auxiliar, &auxiliar, 1));
 	if (line && *auxiliar)
-		line = ft_strjoin_and_free(&line, &auxiliar);
+		line = ft_strjoin_and_free(&line, &auxiliar, 0);
 	else if (*auxiliar)
-		line = ft_strjoin_and_free(&auxiliar, &line);
+		line = ft_strjoin_and_free(&auxiliar, &line, 0);
 	if (line && ft_strchr(line, '\n'))
 		return (breakline_found(&line, auxiliar));
 	else if (end_file_identifier == 0 && line)
-		return (ft_strjoin_and_free(&line, &auxiliar));
+		return (ft_strjoin_and_free(&line, &auxiliar, 0));
 	return (get_next_line(fd));
 }
 
-// int	main (void)
-// {
-// 	int	fd_r;
-// 	fd_r = open("file_r.txt",O_RDONLY);
-// 	char *variavel_r;
+int	main (void)
+{
+	int	fd_r;
+	fd_r = open("file_r.txt",O_RDONLY);
+	char *variavel_r;
 
-// 	variavel_r = get_next_line(fd_r);
-// 	//printf("O TEXTO É: %s", variavel);
-// 	while(variavel_r)
-// 	{
-// 		printf("O TEXTO CERTO É: %s", variavel_r);
-// 		free(variavel_r);
-// 		variavel_r = get_next_line(fd_r);
-// 	}
-// 	free(variavel_r);
-// 	return (0);
-// }
+	variavel_r = get_next_line(fd_r);
+	//printf("O TEXTO É: %s", variavel);
+	while(variavel_r)
+	{
+		printf("O TEXTO CERTO É: %s", variavel_r);
+		free(variavel_r);
+		variavel_r = get_next_line(fd_r);
+	}
+	free(variavel_r);
+	return (0);
+}
 
 // int	main (void)
 // {
