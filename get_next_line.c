@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/15 01:36:37 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/16 22:39:21 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,84 +25,97 @@
 //7. Se a leitura não foi bem sucedida (read = 0), faça uma maracutaia que não sei o que é
 #include "get_next_line.h"
 
-char	*breakline_founded(char **line_that_is_be_readen, char *auxiliar)
+char	*breakline_found(char **line, char *auxiliar)
 {
 	size_t	index;
 	char	*missed_buffer;
-	char	*ponteiro;
+	char	*ptr;
+	char	*unecessary;
 
 	index = 0;
-	while (*(*line_that_is_be_readen + index) != '\n')
+	unecessary = NULL;
+	while (*(*line + index) != '\n')
 		++index;
-	ponteiro = *(line_that_is_be_readen) + index + 1;
-	auxiliar = ft_calloc(ft_strlen(*line_that_is_be_readen) - ft_strlen(ponteiro) + 1, sizeof(char));
-	ft_memmove(auxiliar, *line_that_is_be_readen, ft_strlen(*line_that_is_be_readen) - ft_strlen(ponteiro));
-	if (ft_strncmp(*line_that_is_be_readen, auxiliar, ft_strlen(*line_that_is_be_readen)) == 0)
-	{
-		free(*line_that_is_be_readen);
-		*line_that_is_be_readen = NULL;
-		return (auxiliar);
-	}
+	ptr = *(line) + index + 1;
+	auxiliar = ft_calloc(ft_strlen(*line) - ft_strlen(ptr) + 1, sizeof(char));
+	ft_memmove(auxiliar, *line, ft_strlen(*line) - ft_strlen(ptr));
+	if (ft_strncmp(*line, auxiliar, ft_strlen(*line)) == 0)
+		free(ft_strjoin_and_free(line, &unecessary));
 	else
 	{
-		missed_buffer = ft_strdup_modified(ponteiro);
-		free(*line_that_is_be_readen);
-		*line_that_is_be_readen = ft_strdup_modified(missed_buffer);
-		free(missed_buffer);
+		missed_buffer = ft_calloc(ft_strlen(*line) - index + 1, sizeof(char));
+		ft_memmove(missed_buffer, ptr, ft_strlen(*line) - index);
+		free(*line);
+		*line = ft_strjoin_and_free(&missed_buffer, &unecessary);
 	}
 	return (auxiliar);
 }
 
-void	freed_and_nulled(char **string)
-{
-	free(*string);
-	*string = NULL;
-	return ;
-}
-
 char	*get_next_line(int fd)
 {
-	static char	*line_that_is_be_readen = NULL;
+	static char	*line = NULL;
 	char		*auxiliar;
 	int			end_file_identifier;
 
+	end_file_identifier = 1;
 	auxiliar = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	end_file_identifier = read(fd, auxiliar, BUFFER_SIZE);
-	if (fd < 0 || (!*auxiliar && !line_that_is_be_readen) || !auxiliar || read(fd, auxiliar, 0))
+	if (fd < 0 || (!*auxiliar && !line) || !auxiliar || read(fd, auxiliar, 0))
 	{
 		freed_and_nulled(&auxiliar);
 		return (NULL);
 	}
-	if (line_that_is_be_readen && *auxiliar)
-		line_that_is_be_readen = ft_strjoin_modified(&line_that_is_be_readen, &auxiliar);
+	if (line && *auxiliar)
+		line = ft_strjoin_and_free(&line, &auxiliar);
 	else if (*auxiliar)
-		line_that_is_be_readen = ft_strdup_modified(auxiliar);
-	freed_and_nulled(&auxiliar);
-	if (line_that_is_be_readen && ft_strchr(line_that_is_be_readen, '\n'))
-		return (breakline_founded(&line_that_is_be_readen, auxiliar));
-	else if (end_file_identifier == 0 && line_that_is_be_readen)
-	{
-		auxiliar = ft_strdup_modified(line_that_is_be_readen);
-		freed_and_nulled(&line_that_is_be_readen);
-		return (auxiliar);
-	}
+		line = ft_strjoin_and_free(&auxiliar, &line);
+	if (line && ft_strchr(line, '\n'))
+		return (breakline_found(&line, auxiliar));
+	else if (end_file_identifier == 0 && line)
+		return (ft_strjoin_and_free(&line, &auxiliar));
 	return (get_next_line(fd));
 }
-/*
-int	main (void)
-{
-	int	fd;
-	fd = open("file.txt",O_RDONLY);
-	char *variavel;
 
-	variavel = get_next_line(fd);
-	printf("O TEXTO É: %s", variavel);
-	// while(variavel)
-	// {
-	// 	printf("O TEXTO É: %s", variavel);
-	// 	free(variavel);
-	// 	variavel = get_next_line(fd);
-	// }
-	free(variavel);
-	return (0);
-}*/
+// int	main (void)
+// {
+// 	int	fd_r;
+// 	fd_r = open("file_r.txt",O_RDONLY);
+// 	char *variavel_r;
+
+// 	variavel_r = get_next_line(fd_r);
+// 	//printf("O TEXTO É: %s", variavel);
+// 	while(variavel_r)
+// 	{
+// 		printf("O TEXTO CERTO É: %s", variavel_r);
+// 		free(variavel_r);
+// 		variavel_r = get_next_line(fd_r);
+// 	}
+// 	free(variavel_r);
+// 	return (0);
+//
+
+// int	main (void)
+// {
+// 	int	fd_w;
+// 	int	fd_r;
+// 	fd_w = open("file_w.txt",O_RDONLY);
+// 	fd_r = open("file_r.txt",O_RDONLY);
+// 	char *variavel_w;
+// 	char *variavel_r;
+
+// 	variavel_w = get_next_line_w(fd_w);
+// 	variavel_r = get_next_line_r(fd_r);
+// 	//printf("O TEXTO É: %s", variavel);
+// 	while(variavel_w && variavel_r)
+// 	{
+// 		printf("O TEXTO ERRADO É: %s", variavel_w);
+// 		free(variavel_w);
+// 		variavel_w = get_next_line_w(fd_w);
+// 		printf("O TEXTO CERTO É: %s", variavel_r);
+// 		free(variavel_r);
+// 		variavel_r = get_next_line_r(fd_r);
+// 	}
+// 	free(variavel_w);
+// 	free(variavel_r);
+// 	return (0);
+// }

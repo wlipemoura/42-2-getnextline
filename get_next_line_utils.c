@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:25 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/15 00:10:05 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/16 21:57:34 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,13 @@ size_t	ft_strlen(const char *s)
 	int	counter;
 
 	counter = 0;
+	if (!s)
+		return (counter);
 	while (*(s + counter))
 		counter++;
 	return (counter);
 }
 
-//Lembre-se de testar essa calloc: você a modificou para eliminar a bzero
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*p;
@@ -86,28 +87,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (p);
 }
 
-char	*ft_strjoin_modified(char **s1, char **s2)
-{
-	char	*newstring;
-	int		lens1;
-	int		lens2;
-
-	if (!*s1 || !*s2)
-		return (NULL);
-	lens1 = ft_strlen (*s1);
-	lens2 = ft_strlen (*s2);
-	newstring = ft_calloc ((lens1 + lens2 + 1), sizeof (char));
-	if (!newstring)
-		return (NULL);
-	ft_memmove (newstring, *s1, lens1);
-	ft_memmove (newstring + lens1, *s2, lens2);
-	free(*s1);//Here is the modification
-	*s1 = NULL;
-	free(*s2);
-	*s2 = NULL;
-	return (newstring);
-}
-
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t	cont;
@@ -122,7 +101,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-char	*ft_strdup_modified(char *s)
+char	*ft_strdup(char *s)
 {
 	char	*new_string;
 	size_t	length;
@@ -133,4 +112,31 @@ char	*ft_strdup_modified(char *s)
 		return (NULL);
 	ft_memmove(new_string, s, length);
 	return (new_string);
+}
+
+char	*ft_strjoin_and_free(char **s1, char **s2)
+{
+	char	*newstring;
+	int		lens1;
+	int		lens2;
+
+	lens1 = ft_strlen (*s1);
+	lens2 = ft_strlen (*s2);
+	newstring = ft_calloc ((lens1 + lens2 + 1), sizeof (char));
+	if (!newstring)
+		return (NULL);
+	ft_memmove(newstring, *s1, lens1);
+	ft_memmove(newstring + lens1, *s2, lens2);
+	free(*s2);
+	*s2 = NULL;
+	free(*s1);
+	*s1 = NULL;
+	return (newstring);
+}
+
+void	freed_and_nulled(char **string)
+{
+	free(*string);
+	*string = NULL;
+	return ;
 }
