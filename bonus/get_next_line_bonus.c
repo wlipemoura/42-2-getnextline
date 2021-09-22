@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/22 01:10:27 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/22 02:15:22 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 
 //7. Se a leitura não foi bem sucedida (read = 0), 
 //faça uma maracutaia que não sei o que é
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strjoin_and_free(char **s1, char **s2, int return_flag)
 {
@@ -84,25 +84,26 @@ char	*breakline_found(char **line, char *auxiliar)
 
 char	*get_next_line(int fd)
 {
-	static char	*line = NULL;
+	static char	*line[OPEN_MAX + 1];
 	char		*auxiliar;
 	int			end_file_identifier;
-
 
 	end_file_identifier = 1;
 	auxiliar = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
 	end_file_identifier = read(fd, auxiliar, BUFFER_SIZE);
-	if (fd < 0 || (!*auxiliar && !line) || !auxiliar || read(fd, auxiliar, 0))
+	if (fd < 0 || !auxiliar || read(fd, auxiliar, 0) || BUFFER_SIZE <= 0) //|| (!*auxiliar && !(line + fd - 3)) ||
 		return (ft_strjoin_and_free(&auxiliar, &auxiliar, 1));
-	if (line && *auxiliar)
-		line = ft_strjoin_and_free(&line, &auxiliar, 0);
-	else if (*auxiliar)
-		line = ft_strjoin_and_free(&auxiliar, &line, 0);
-	if (line && ft_strchr(line, '\n'))
-		return (breakline_found(&line, auxiliar));
-	else if (end_file_identifier == 0 && line)
-		return (ft_strjoin_and_free(&line, &auxiliar, 0));
-	return(get_next_line(fd));
+	if (*(line + fd - 3) && *auxiliar)//Tem buffer sobrando e ainda foi lido algo
+		*(line + fd - 3) = ft_strjoin_and_free((line + fd - 3), &auxiliar, 0);
+	else if (*auxiliar)//Não tem buffer sobrando mas foi lido algo
+		*(line + fd - 3) = ft_strjoin_and_free(&auxiliar, (line + fd - 3), 0);
+	if (*(line + fd - 3) && ft_strchr(*(line + fd - 3), '\n'))//Encontrei uma quebra de linha
+		return (breakline_found((line + fd - 3), auxiliar));
+	if (end_file_identifier == 0 && *(line + fd - 3))
+		return (ft_strjoin_and_free((line + fd - 3), &auxiliar, 0));
+	else if (end_file_identifier == 0)//não encontrei uma quebra de linha mas estou no fim do
+		return (ft_strjoin_and_free((line + fd - 3), &auxiliar, 1));
+	return (get_next_line(fd));
 }
 
 // int	main (void)
@@ -112,7 +113,7 @@ char	*get_next_line(int fd)
 // 	char *variavel_r;
 
 // 	variavel_r = get_next_line(fd_r);
-// 	//printf("O TEXTO É: %s", variavel);
+// 	// printf("O TEXTO É: %s", variavel_r);
 // 	while(variavel_r)
 // 	{
 // 		printf("O TEXTO CERTO É: %s", variavel_r);
@@ -120,6 +121,11 @@ char	*get_next_line(int fd)
 // 		variavel_r = get_next_line(fd_r);
 // 	}
 // 	free(variavel_r);
+// 	// variavel_r = get_next_line(fd_r);
+// 	// printf("O TEXTO É: %s", variavel_r);
+// 	// free(variavel_r);
+// 	// printf("O TEXTO É: %s", variavel_r);
+// 	// free(variavel_r);
 // 	return (0);
 // }
 
