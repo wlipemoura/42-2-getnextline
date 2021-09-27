@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/27 08:44:49 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/27 09:09:56 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,52 +87,3 @@ char	*get_next_line(int fd)
 		return (ft_strjoin_and_free((line + fd), &auxiliar, 1));
 	return (get_next_line(fd));
 }
-
-// int	main (void)
-// {
-// 	int	fd_r;
-// 	fd_r = open("file_r.txt",O_RDONLY);
-// 	char *variavel_r;
-
-// 	variavel_r = get_next_line(fd_r);
-// 	// printf("O TEXTO É: %s", variavel_r);
-// 	while(variavel_r)
-// 	{
-// 		printf("O TEXTO CERTO É: %s", variavel_r);
-// 		free(variavel_r);
-// 		variavel_r = get_next_line(fd_r);
-// 	}
-// 	free(variavel_r);
-// 	// variavel_r = get_next_line(fd_r);
-// 	// printf("O TEXTO É: %s", variavel_r);
-// 	// free(variavel_r);
-// 	// printf("O TEXTO É: %s", variavel_r);
-// 	// free(variavel_r);
-// 	return (0);
-// }
-
-// int	main (void)
-// {
-// 	int	fd_w;
-// 	int	fd_r;
-// 	fd_w = open("file_w.txt",O_RDONLY);
-// 	fd_r = open("file_r.txt",O_RDONLY);
-// 	char *variavel_w;
-// 	char *variavel_r;
-
-// 	variavel_w = get_next_line_w(fd_w);
-// 	variavel_r = get_next_line_r(fd_r);
-// 	//printf("O TEXTO É: %s", variavel);
-// 	while(variavel_w && variavel_r)
-// 	{
-// 		printf("O TEXTO ERRADO É: %s", variavel_w);
-// 		free(variavel_w);
-// 		variavel_w = get_next_line_w(fd_w);
-// 		printf("O TEXTO CERTO É: %s", variavel_r);
-// 		free(variavel_r);
-// 		variavel_r = get_next_line_r(fd_r);
-// 	}
-// 	free(variavel_w);
-// 	free(variavel_r);
-// 	return (0);
-// }
