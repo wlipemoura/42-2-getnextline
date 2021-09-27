@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:19 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/27 11:51:46 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/27 12:45:50 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,19 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
+
+/**
+ * @brief read BUFFER_SIZE on a FD and return the line read until found a '\n'
+ * or until the end of the file, if it doesn't find a '\n'. It can be called
+ * more than once to read the following lines on the same file, until reach
+ * the end of it.
+ * 
+ * @param fd is the File Descriptor associated to the reading.
+ * 
+ * @return the line read including '\n'.
+ * @return NULL if the file is empty or an error occurred.
+ */
+char	*get_next_line(int fd);
 
 /**
  * @brief copies 'n' bytes from the 'src' memory to the 'dest' memory.

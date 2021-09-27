@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:19 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/27 11:27:15 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/27 12:44:56 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@
  * 
  * @param fd is the File Descriptor associated to the reading.
  * 
- * @return the line read.
+ * @return the line read including '\n'.
+ * @return NULL if the file is empty or an error occurred.
  */
 char	*get_next_line(int fd);
 
