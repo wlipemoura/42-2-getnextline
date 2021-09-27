@@ -6,28 +6,10 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:22 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/22 02:15:22 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/27 08:44:49 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//Garanta que sua função se comporta bem tanto lendo um arquivo quanto  
-//lendo um input padrão.
-
-//Seu programa precisa compilar com a flag -D BUFFER_SIZE=xx, que 
-//será usada como o tamanho do buffer
-//a ser lido na sua função get_next_line: 
-//gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
-
-//Cada vez que você encontrar uma linha, você deve retornar a linha atual.
-
-//Sua função ainda funciona quando o BUFFER_SIZE é 9999? E 1?
-
-//Try to read from a file, from a redirection, from standard input. 
-//How does your program behave when you send a
-//newline to the standard output? And CTRL-D?
-
-//7. Se a leitura não foi bem sucedida (read = 0), 
-//faça uma maracutaia que não sei o que é
 #include "get_next_line_bonus.h"
 
 char	*ft_strjoin_and_free(char **s1, char **s2, int return_flag)
@@ -91,18 +73,18 @@ char	*get_next_line(int fd)
 	end_file_identifier = 1;
 	auxiliar = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
 	end_file_identifier = read(fd, auxiliar, BUFFER_SIZE);
-	if (fd < 0 || !auxiliar || read(fd, auxiliar, 0) || BUFFER_SIZE <= 0) //|| (!*auxiliar && !(line + fd - 3)) ||
+	if (fd < 0 || !auxiliar || read(fd, auxiliar, 0) || BUFFER_SIZE <= 0)
 		return (ft_strjoin_and_free(&auxiliar, &auxiliar, 1));
-	if (*(line + fd - 3) && *auxiliar)//Tem buffer sobrando e ainda foi lido algo
-		*(line + fd - 3) = ft_strjoin_and_free((line + fd - 3), &auxiliar, 0);
-	else if (*auxiliar)//Não tem buffer sobrando mas foi lido algo
-		*(line + fd - 3) = ft_strjoin_and_free(&auxiliar, (line + fd - 3), 0);
-	if (*(line + fd - 3) && ft_strchr(*(line + fd - 3), '\n'))//Encontrei uma quebra de linha
-		return (breakline_found((line + fd - 3), auxiliar));
-	if (end_file_identifier == 0 && *(line + fd - 3))
-		return (ft_strjoin_and_free((line + fd - 3), &auxiliar, 0));
-	else if (end_file_identifier == 0)//não encontrei uma quebra de linha mas estou no fim do
-		return (ft_strjoin_and_free((line + fd - 3), &auxiliar, 1));
+	if (*(line + fd) && *auxiliar)
+		*(line + fd) = ft_strjoin_and_free((line + fd), &auxiliar, 0);
+	else if (*auxiliar)
+		*(line + fd) = ft_strjoin_and_free(&auxiliar, (line + fd), 0);
+	if (*(line + fd) && ft_strchr(*(line + fd), '\n'))
+		return (breakline_found((line + fd), auxiliar));
+	if (end_file_identifier == 0 && *(line + fd))
+		return (ft_strjoin_and_free((line + fd), &auxiliar, 0));
+	else if (end_file_identifier == 0)
+		return (ft_strjoin_and_free((line + fd), &auxiliar, 1));
 	return (get_next_line(fd));
 }
 
