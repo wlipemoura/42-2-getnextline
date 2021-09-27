@@ -6,7 +6,7 @@
 /*   By: wfelipe- < wfelipe-@student.42sp.org.br    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:19 by wfelipe-          #+#    #+#             */
-/*   Updated: 2021/09/27 11:27:46 by wfelipe-         ###   ########.fr       */
+/*   Updated: 2021/09/27 11:51:46 by wfelipe-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <limits.h>
 
 # ifndef OPEN_MAX
 #  define OPEN_MAX 256
